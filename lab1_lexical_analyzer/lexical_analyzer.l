@@ -6,10 +6,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <regex.h>
 int files_count = 0;
-int lines;
-int pos_start;
-int pos_end;
+int lines = 1;
+int pos_start = 1;
+int pos_end = 1;
 
 enum cminus_token_type{
 	ERROR = 258,
@@ -53,8 +54,39 @@ enum cminus_token_type{
 %%
 
  /****请在此补全所有flex的模式与动作  start******/
-
-. {return ERROR;}
+\n					{ lines += 1; pos_start = 1; pos_end = 1; return EOL; }
+\t					{ pos_end += 1; return BLANK; }
+" "					{ pos_end += 1; return BLANK; }
+"/*"([^\*]|(\*)[^\/])*"*/"	{ pos_end = pos_start + strlen(yytext); return COMMENT; }
+\[[0-9]+\]			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ARRAY;}
+"+"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ADD; }
+"-"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return SUB; }
+"*"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return MUL; }
+"/"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return DIV; }
+"<"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return LT; }
+"<="				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return LTE; }
+">"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return GT; }
+">="				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return GTE; }
+"=="				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return EQ; }
+"!=	"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return NEQ; }
+"="					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ASSIN; }
+";"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return SEMICOLON; }
+","					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return COMMA; }
+"("					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return LPARENTHESE; }
+")"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return RPARENTHESE; }
+"["					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return LBRACKET; }
+"]"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return RBRACKET; }
+"{"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return LBRACE; }
+"}"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return RBRACE; }
+"else"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ELSE; }
+"if"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return IF; }
+"int"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return INT; }
+"return"			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return RETURN; }
+"void"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return VOID; }
+"while"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return WHILE; }
+[a-zA-Z]+			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return IDENTIFIER; }
+[0-9]+				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return NUMBER; }
+. 					{ return ERROR; }
 
 
  /****  end******/
@@ -85,6 +117,8 @@ void analyzer(char* input_file_name, char* output_file_name){
 				fprintf(fp, "[ERR]: unable to analysize %s at %d line, from %d to %d\n", yytext, lines, pos_start, pos_end);
 				break;
 			case COMMENT:
+				//printf("comment: %s\n",yytext);
+				break;
 			case BLANK:
 				break;
 			case EOL:
@@ -102,6 +136,27 @@ void analyzer(char* input_file_name, char* output_file_name){
 /// under 'testcase' directory, there could be many *.cminus files.
 /// \todo student should fill this function
 void getAllTestcase(char filename[][256]){
+	DIR *dp;
+	struct dirent *dirp;
+	regex_t re;
+	const char pattern[] = "^.*\.cminus$";
+	if (regcomp(&re, pattern, REG_EXTENDED | REG_NOSUB) != 0)
+		perror("compile pattern failed");
+	if ((dp = opendir("./testcase")) == NULL)
+		perror("could not open dir");
+	while ((dirp = readdir(dp)) != NULL)
+	{
+		int status = regexec(&re, dirp->d_name, 0, NULL, 0);
+		if (status == 0)
+		{
+			strcpy(filename[files_count], dirp->d_name);
+			files_count++;
+		}
+		
+	}
+	// printf("%s\n", dirp->d_name);
+	regfree(&re);
+	closedir(dp);
 }
 
 /// \brief process all *.cminus file
@@ -116,8 +171,9 @@ int main(int argc, char **argv){
 	char suffix[] = ".tokens";
 	getAllTestcase(filename);
 	for(int i = 0; i < files_count; i++){
-
-			analyzer(filename[i],output_file_name);
+		strcpy(output_file_name,filename[i]);
+		strcpy(output_file_name+strlen(filename[i])-7,suffix);
+		analyzer(filename[i],output_file_name);
 	}
 	return 0;
 }
