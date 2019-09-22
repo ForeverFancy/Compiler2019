@@ -164,15 +164,7 @@ void getAllTestcase(char filename[][256]){
 		int status = regexec(&re, dirp->d_name, 0, NULL, 0);
 		if (status == 0)
 		{	
-			struct stat s_buf;
-			char file_path[4096];
-			strcpy(file_path,"./testcase/");
-			strcat(file_path,dirp->d_name);
-			stat(file_path,&s_buf);
-			printf("%s\n",file_path);
-			if(S_ISDIR(s_buf.st_mode))
-				continue;
-			else
+			if(dirp -> d_type == DT_REG)
 			{
 				strcpy(filename[files_count], dirp->d_name);
 				files_count++;
@@ -191,7 +183,7 @@ void getAllTestcase(char filename[][256]){
 /// then create *.tokens files under 'tokens' directory
 /// \todo student should fill this function
 int main(int argc, char **argv){
-	char filename[10][256];
+	char filename[100][256];
 	char output_file_name[256];
 	char suffix[] = ".tokens";
 	getAllTestcase(filename);
