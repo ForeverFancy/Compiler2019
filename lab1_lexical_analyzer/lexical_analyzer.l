@@ -163,11 +163,21 @@ void getAllTestcase(char filename[][256]){
 	{
 		int status = regexec(&re, dirp->d_name, 0, NULL, 0);
 		if (status == 0)
-		{
-			strcpy(filename[files_count], dirp->d_name);
-			files_count++;
+		{	
+			struct stat s_buf;
+			char file_path[4096];
+			strcpy(file_path,"./testcase/");
+			strcat(file_path,dirp->d_name);
+			stat(file_path,&s_buf);
+			printf("%s\n",file_path);
+			if(S_ISDIR(s_buf.st_mode))
+				continue;
+			else
+			{
+				strcpy(filename[files_count], dirp->d_name);
+				files_count++;
+			}
 		}
-		
 	}
 	// printf("%s\n", dirp->d_name);
 	regfree(&re);
