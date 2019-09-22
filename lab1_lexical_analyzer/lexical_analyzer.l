@@ -68,10 +68,9 @@ enum cminus_token_type{
 										pos_end = 1;
 									}
 								} 
-								
 								return COMMENT; 
 							}
-\[[0-9]+\]			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ARRAY;}
+\[\]			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ARRAY;}
 "+"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ADD; }
 "-"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return SUB; }
 "*"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return MUL; }
@@ -142,6 +141,9 @@ void analyzer(char* input_file_name, char* output_file_name){
 	}
 	fclose(fp);
 	printf("[END]: Analysis completed.\n");
+	lines = 1;
+	pos_start = 1;
+	pos_end = 1;
 }
 
 /// \brief get all file paths under 'testcase' directory
