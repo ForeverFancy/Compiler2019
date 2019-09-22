@@ -57,7 +57,20 @@ enum cminus_token_type{
 \n					{ lines += 1; pos_start = 1; pos_end = 1; return EOL; }
 \t					{ pos_end += 1; return BLANK; }
 " "					{ pos_end += 1; return BLANK; }
-"/*"([^\*]|(\*)[^\/])*"*/"	{ pos_end = pos_start + strlen(yytext); return COMMENT; }
+"/*"([^\*]|(\*)[^\/])*"*/"	{ 	pos_end = pos_start; 
+								int length = strlen(yytext); 
+								for(int i = 0; i < length; i++)
+								{
+									pos_end++;
+									if( yytext[i] == '\n')
+									{
+										lines++;
+										pos_end = 1;
+									}
+								} 
+								
+								return COMMENT; 
+							}
 \[[0-9]+\]			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ARRAY;}
 "+"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ADD; }
 "-"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return SUB; }
