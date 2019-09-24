@@ -81,7 +81,7 @@ enum cminus_token_type{
 ">"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return GT; }
 ">="				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return GTE; }
 "=="				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return EQ; }
-"!=	"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return NEQ; }
+"!="				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return NEQ; }
 "="					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ASSIN; }
 ";"					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return SEMICOLON; }
 ","					{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return COMMA; }
