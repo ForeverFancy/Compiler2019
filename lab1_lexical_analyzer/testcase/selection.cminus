@@ -1,12 +1,15 @@
 /* A program to perform selection sort on a 10
    element array */
 
-int x[10];
+int /* test
+/* ** try this comment
+**/
+x[10];
 
 int minloc(int a[], int low, int high)
 {
     int i; int x; int k;
-
+    int a23b9;
     k = low;
     x = a [low];
     i = low + 1;
