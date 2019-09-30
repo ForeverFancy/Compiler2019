@@ -135,7 +135,6 @@ void analyzer(char* input_file_name, char* output_file_name){
 	pos_end = 1;
 }
 
-<<<<<<< HEAD
 /// \brief get all file paths under 'testcase' directory
 ///
 /// under 'testcase' directory, there could be many *.cminus files.
@@ -172,29 +171,15 @@ void getAllTestcase(char filename[][256]){
 ///	process all *.cminus files under 'testcase' directory,
 /// then create *.tokens files under 'tokens' directory
 /// \todo student should fill this function
-int main(int argc, char **argv){
-	char filename[100][256];
-=======
-/// \brief process all *.cminus file
-///
-/// note that: use relative path for all i/o operations
 int lex_main(int argc, char **argv){
 	char filename[10][256];
->>>>>>> e48757d96cb65298787d650947291d43583f7d55
 	char output_file_name[256];
 	char suffix[] = ".tokens";
 	files_count = getAllTestcase(filename);
 	for(int i = 0; i < files_count; i++){
-<<<<<<< HEAD
 		strcpy(output_file_name,filename[i]);
 		strcpy(output_file_name+strlen(filename[i])-7,suffix);
 		analyzer(filename[i],output_file_name);
-=======
-			int name_len = strstr(filename[i], ".cminus")-filename[i];
-			strncpy(output_file_name, filename[i], name_len);
-			strcpy(output_file_name+name_len, suffix);
-			analyzer(filename[i],output_file_name);
->>>>>>> e48757d96cb65298787d650947291d43583f7d55
 	}
 	return 0;
 }
