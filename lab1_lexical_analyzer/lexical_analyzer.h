@@ -2,7 +2,13 @@
 #define _LEXICAL_ANALYZER_H_
 
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <regex.h>
+#include <stdlib.h>
 
+#define DT_REG 8
 extern int fileno (FILE *__stream) __THROW __wur;
 
 #ifndef YYTOKENTYPE
@@ -36,7 +42,7 @@ typedef enum cminus_token_type {
 	WHILE = 283,
 	IDENTIFIER = 284,
 	NUMBER = 285,
-	ARRAY = 286
+	ARRAY = 286,
 	LETTER = 287,
 	EOL = 288,
 	COMMENT = 289,

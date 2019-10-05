@@ -139,7 +139,7 @@ void analyzer(char* input_file_name, char* output_file_name){
 ///
 /// under 'testcase' directory, there could be many *.cminus files.
 /// \todo student should fill this function
-void getAllTestcase(char filename[][256]){
+int getAllTestcase(char filename[][256]){
 	DIR *dp;
 	struct dirent *dirp;
 	regex_t re;
@@ -163,6 +163,7 @@ void getAllTestcase(char filename[][256]){
 	// printf("%s\n", dirp->d_name);
 	regfree(&re);
 	closedir(dp);
+	return files_count;
 }
 
 /// \brief process all *.cminus file
