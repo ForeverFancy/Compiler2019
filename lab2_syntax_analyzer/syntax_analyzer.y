@@ -29,6 +29,36 @@ void yyerror(const char * s);
 
 /********** TODO: Your token definition here ***********/
 
+%token ADD
+%token SUB
+%token MUL
+%token DIV
+%token LT
+%token LTE
+%token GT
+%token GTE
+%token EQ
+%token NEQ
+%token ASSIN
+%token SEMICOLON
+%token COMMA
+%token LPARENTHESE
+%token RPARENTHESE
+%token LBRACKET
+%token RBRACKET
+%token LBRACE
+%token RBRACE
+%token ELSE
+%token IF
+%token INT
+%token RETURN
+%token VOID
+%token WHILE
+%token IDENTIFIER
+%token NUMBER
+%token ARRAY
+%token LETTER
+
 /* compulsory starting symbol */
 %start program
 

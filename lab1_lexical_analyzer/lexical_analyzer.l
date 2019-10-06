@@ -33,9 +33,9 @@ identifierPattern [a-zA-Z][a-zA-Z]*
 
  /******************TODO*********************/
  /****请在此补全所有flex的模式与动作  start******/
-\n					{ lines += 1; pos_start = 1; pos_end = 1; return EOL; }
-\t					{ pos_end += 1; return BLANK; }
-" "					{ pos_end += 1; return BLANK; }
+\n					{ lines += 1; pos_start = 1; pos_end = 1; }
+\t					{ pos_end += 1; }
+" "					{ pos_end += 1; }
 "/*"([^\*]|(\*)[^\/])*\*+\/	{ 	pos_end = pos_start; 
 								int length = strlen(yytext); 
 								for(int i = 0; i < length; i++)
