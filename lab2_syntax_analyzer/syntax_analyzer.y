@@ -25,11 +25,12 @@ void yyerror(const char * s);
 %}
 
 %union {
+	char * value;
 /********** TODO: Fill in this union structure *********/
 }
 
 /********** TODO: Your token definition here ***********/
-
+%token ERROR
 %token ADD
 %token SUB
 %token MUL
@@ -55,18 +56,81 @@ void yyerror(const char * s);
 %token RETURN
 %token VOID
 %token WHILE
-%token IDENTIFIER
+%token <value> IDENTIFIER
 %token NUMBER
 %token ARRAY
 %token LETTER
+%token EOL
+%token COMMENT
+%token BLANK
 
 /* compulsory starting symbol */
 %start program
 
 %%
 /*************** TODO: Your rules here *****************/
-program :
- | ;
+
+program : declaration-list;
+
+declaration-list : declaration-list declaration 
+				| declaration 
+				;
+
+declaration : var-declaration 
+			| fun-declaration 
+			;
+
+var-declaration : type-specifier IDENTIFIER  SEMICOLON { printf("ID %s\n",$2); } | type-specifier IDENTIFIER LBRACKET NUMBER RBRACKET SEMICOLON ;
+
+type-specifier : INT | VOID ;
+
+fun-declaration : type-specifier IDENTIFIER LPARENTHESE params RPARENTHESE compound-stmt ;
+
+params : param-list | VOID ;
+
+param-list: param-list COMMA param | param ;
+
+param : type-specifier IDENTIFIER | type-specifier IDENTIFIER ARRAY ;
+
+compound-stmt : LBRACE local-declarations statement-list RBRACE ;
+
+local-declarations : local-declarations var-declaration | /* empty */ ;
+
+statement-list : statement-list statement | /* empty */;
+
+statement : expression-stmt | compound-stmt| selection-stmt | iteration-stmt | return-stmt ;
+
+expression-stmt : expression SEMICOLON | SEMICOLON ;
+
+selection-stmt : IF LPARENTHESE expression RPARENTHESE statement | IF LPARENTHESE expression RPARENTHESE statement ELSE statement ;
+
+iteration-stmt : WHILE LPARENTHESE expression RPARENTHESE statement ;
+
+return-stmt : RETURN SEMICOLON | RETURN expression SEMICOLON ;
+
+expression : var ASSIN expression | simple-expression ;
+
+var : IDENTIFIER | IDENTIFIER LBRACKET expression RBRACKET ;
+
+simple-expression : additive-expression relop additive-expression | additive-expression ;
+
+relop : LTE | LT | GT | GTE | EQ | NEQ ;
+
+additive-expression : additive-expression addop term | term ;
+
+addop : ADD | SUB ;
+
+term : term mulop factor | factor ;
+
+mulop : MUL | DIV ;
+
+factor : LPARENTHESE expression RPARENTHESE | var | call | NUMBER ;
+
+call : IDENTIFIER LPARENTHESE args RPARENTHESE ;
+
+args : arg-list | /* empty */;
+
+arg-list : arg-list COMMA expression | expression ;
 
 %%
 
@@ -104,8 +168,8 @@ void syntax(const char * input, const char * output)
 	yyparse();
 
 	printf("[OUTPUT] Printing tree to output file %s\n", outputpath);
-	printSyntaxTree(fp, gt);
-	deleteSyntaxTree(gt);
+	//printSyntaxTree(fp, gt);
+	//deleteSyntaxTree(gt);
 	gt = 0;
 
 	fclose(fp);
@@ -122,9 +186,8 @@ int syntax_main(int argc, char ** argv)
 	const char * suffix = ".syntax_tree";
 	int fn = getAllTestcase(filename);
 	for (int i = 0; i < fn; i++) {
-			int name_len = strstr(filename[i], ".cminus") - filename[i];
-			strncpy(output_file_name, filename[i], name_len);
-			strcpy(output_file_name+name_len, suffix);
+			strcpy(output_file_name,filename[i]);
+			strcpy(output_file_name+strlen(filename[i])-7,suffix);
 			syntax(filename[i], output_file_name);
 	}
 	return 0;

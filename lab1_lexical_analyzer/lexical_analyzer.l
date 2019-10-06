@@ -7,6 +7,7 @@
 #include <dirent.h>
 #include <regex.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "lab1_lexical_analyzer/lexical_analyzer.h"
 #include "common/common.h"
@@ -45,7 +46,7 @@ identifierPattern [a-zA-Z][a-zA-Z]*
 										pos_end = 1;
 									}
 								} 
-								return COMMENT; 
+								//return COMMENT; 
 							}
 ([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+)*		{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ERROR; }
 \[\]				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ARRAY; }
@@ -74,7 +75,7 @@ identifierPattern [a-zA-Z][a-zA-Z]*
 "return"			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return RETURN; }
 "void"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return VOID; }
 "while"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return WHILE; }
-[a-zA-Z]+			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return IDENTIFIER; }
+[a-zA-Z]+			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); yylval=strdup(yytext);return IDENTIFIER; }
 [0-9]+				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return NUMBER; }
 . 					{ return ERROR; }
 
