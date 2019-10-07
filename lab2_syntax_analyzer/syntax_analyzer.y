@@ -16,6 +16,8 @@ extern FILE * yyin;
 
 // external variables from lexical_analyzer module
 extern int lines;
+extern int pos_start;
+extern int pos_end;
 extern char * yytext;
 
 // Global syntax tree.
@@ -581,7 +583,7 @@ void yyerror(const char * s)
 {
 	// TODO: variables in Lab1 updates only in analyze() function in lexical_analyzer.l
 	//       You need to move position updates to show error output below
-	fprintf(stderr, "%s:%d syntax error for %s\n", s, lines, yytext);
+	fprintf(stderr, "%s:syntax error for %s in line: %d, pos_start: %d, pos_end:%d \n", s, yytext, lines, pos_start, pos_end);
 }
 
 /// \brief Syntax analysis from input file to output file
