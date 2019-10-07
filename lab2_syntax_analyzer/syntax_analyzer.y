@@ -95,6 +95,9 @@ void yyerror(const char * s);
 %type <node> args
 %type <node> arg-list
 /* compulsory starting symbol */
+// Precedences go increasing, so that then < else
+%nonassoc "then"
+%nonassoc ELSE
 %start program
 
 %%
@@ -323,7 +326,7 @@ expression-stmt : expression SEMICOLON
 				}
 				;
 
-selection-stmt : IF LPARENTHESE expression RPARENTHESE statement 
+selection-stmt : IF LPARENTHESE expression RPARENTHESE statement    			%prec "then"
 				{
 					SyntaxTreeNode * temp1 = newSyntaxTreeNode("if");
 					SyntaxTreeNode * temp2 = newSyntaxTreeNode("(");
