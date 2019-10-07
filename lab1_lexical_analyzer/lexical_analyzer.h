@@ -7,6 +7,8 @@
 #include <dirent.h>
 #include <regex.h>
 #include <stdlib.h>
+#include <string.h>
+#include "syntax_tree/SyntaxTree.h"
 
 #define DT_REG 8
 extern int fileno (FILE *__stream) __THROW __wur;
@@ -52,5 +54,16 @@ typedef enum cminus_token_type {
 #endif /* YYTOKENTYPE */
 
 const char * strtoken(Token t);
+
+typedef struct _SyntaxTreeNode SyntaxTreeNode;
+
+typedef union
+{
+	SyntaxTreeNode *node;
+    char *string;
+}Type;
+
+#define YYSTYPE Type
+
 
 #endif /* lexical_analyzer.h */

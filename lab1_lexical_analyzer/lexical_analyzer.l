@@ -10,6 +10,7 @@
 #include <string.h>
 
 #include "lab1_lexical_analyzer/lexical_analyzer.h"
+#include "build/lab1_lexical_analyzer/syntax_analyzer.h"
 #include "common/common.h"
 
 #ifndef LAB1_ONLY
@@ -20,6 +21,7 @@ int files_count = 0;
 int lines = 1;
 int pos_start = 1;
 int pos_end = 1;
+YYSTYPE yylval;
 
 /*****************声明和选项设置  end*****************/
 
@@ -75,7 +77,7 @@ identifierPattern [a-zA-Z][a-zA-Z]*
 "return"			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return RETURN; }
 "void"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return VOID; }
 "while"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return WHILE; }
-[a-zA-Z]+			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); yylval=strdup(yytext);return IDENTIFIER; }
+[a-zA-Z]+			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); yylval.string=strdup(yytext);return IDENTIFIER; }
 [0-9]+				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return NUMBER; }
 . 					{ return ERROR; }
 

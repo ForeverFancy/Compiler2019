@@ -25,45 +25,74 @@ void yyerror(const char * s);
 %}
 
 %union {
-	char * value;
+	SyntaxTreeNode *node;
+	char *string;
 /********** TODO: Fill in this union structure *********/
 }
 
 /********** TODO: Your token definition here ***********/
 %token ERROR
-%token ADD
-%token SUB
-%token MUL
-%token DIV
-%token LT
-%token LTE
-%token GT
-%token GTE
-%token EQ
-%token NEQ
-%token ASSIN
-%token SEMICOLON
-%token COMMA
-%token LPARENTHESE
-%token RPARENTHESE
-%token LBRACKET
-%token RBRACKET
-%token LBRACE
-%token RBRACE
-%token ELSE
-%token IF
-%token INT
-%token RETURN
-%token VOID
-%token WHILE
-%token <value> IDENTIFIER
-%token NUMBER
-%token ARRAY
-%token LETTER
+%token <string> ADD
+%token <string> SUB
+%token <string> MUL
+%token <string> DIV
+%token <string> LT
+%token <string> LTE
+%token <string> GT
+%token <string> GTE
+%token <string> EQ
+%token <string> NEQ
+%token <string> ASSIN
+%token <string> SEMICOLON
+%token <string> COMMA
+%token <string> LPARENTHESE
+%token <string> RPARENTHESE
+%token <string> LBRACKET
+%token <string> RBRACKET
+%token <string> LBRACE
+%token <string> RBRACE
+%token <string> ELSE
+%token <string> IF
+%token <string> INT
+%token <string> RETURN
+%token <string> VOID
+%token <string> WHILE
+%token <string> IDENTIFIER
+%token <string> NUMBER
+%token <string> ARRAY
+%token <string> LETTER
 %token EOL
 %token COMMENT
 %token BLANK
 
+%type <node> program
+%type <node> declaration-list
+%type <node> declaration 
+%type <node> var-declaration 
+%type <node> type-specifier 
+%type <node> fun-declaration
+%type <node> param-list
+%type <node> param 
+%type <node> compound-stmt 
+%type <node> local-declarations 
+%type <node> statement-list 
+%type <node> statement
+%type <node> expression-stmt
+%type <node> selection-stmt
+%type <node> iteration-stmt
+%type <node> return-stmt
+%type <node> expression
+%type <node> var
+%type <node> simple-expression
+%type <node> relop
+%type <node> additive-expression 
+%type <node> addop
+%type <node> term
+%type <node> mulop
+%type <node> factor
+%type <node> call
+%type <node> args
+%type <node> arg-list
 /* compulsory starting symbol */
 %start program
 
@@ -80,7 +109,7 @@ declaration : var-declaration
 			| fun-declaration 
 			;
 
-var-declaration : type-specifier IDENTIFIER  SEMICOLON { printf("ID %s\n",$2); } | type-specifier IDENTIFIER LBRACKET NUMBER RBRACKET SEMICOLON ;
+var-declaration : type-specifier IDENTIFIER  SEMICOLON { printf("ID %s\n",$2); } | type-specifier IDENTIFIER LBRACKET NUMBER RBRACKET SEMICOLON { printf("ID %s\n",$2); };
 
 type-specifier : INT | VOID ;
 
