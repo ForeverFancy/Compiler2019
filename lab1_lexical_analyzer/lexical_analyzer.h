@@ -10,7 +10,6 @@
 #include <string.h>
 #include "syntax_tree/SyntaxTree.h"
 
-#define DT_REG 8
 extern int fileno (FILE *__stream) __THROW __wur;
 
 #ifndef YYTOKENTYPE

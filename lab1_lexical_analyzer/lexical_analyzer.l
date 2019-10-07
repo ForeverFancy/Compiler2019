@@ -77,8 +77,8 @@ identifierPattern [a-zA-Z][a-zA-Z]*
 "return"			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return RETURN; }
 "void"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return VOID; }
 "while"				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return WHILE; }
-[a-zA-Z]+			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); yylval.string=strdup(yytext);return IDENTIFIER; }
-[0-9]+				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return NUMBER; }
+[a-zA-Z]+			{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); yylval.string = strdup(yytext); return IDENTIFIER; }
+[0-9]+				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); yylval.string = strdup(yytext); return NUMBER; }
 . 					{ return ERROR; }
 
 
