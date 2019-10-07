@@ -102,10 +102,9 @@ void yyerror(const char * s);
 
 program : declaration-list 
 		{ 
-			strcpy(gt->root->name,"program"); 
-			printf("Add node.\n"); 
-			// $1 = newSyntaxTreeNode("declaration-list"); 
-			SyntaxTreeNode_AddChild(gt->root, $1); 
+			$$ = newSyntaxTreeNode("program"); 
+			gt -> root = $$;
+			SyntaxTreeNode_AddChild($$, $1); 
 		};
 
 declaration-list : declaration-list declaration 
@@ -135,17 +134,18 @@ declaration : var-declaration
 
 var-declaration : type-specifier IDENTIFIER  SEMICOLON 
 				{ 
-					printf("ID %s\n",$2); 
+					// printf("ID %s\n",$2); 
 					SyntaxTreeNode * temp1 = newSyntaxTreeNode($2);
 					SyntaxTreeNode * temp2 = newSyntaxTreeNode(";");
 					$$ = newSyntaxTreeNode("var-declaration");
 					SyntaxTreeNode_AddChild($$,$1);
 					SyntaxTreeNode_AddChild($$,temp1);
 					SyntaxTreeNode_AddChild($$,temp2);
+					free($2);
 				} 
 				| type-specifier IDENTIFIER LBRACKET NUMBER RBRACKET SEMICOLON 
 				{ 
-					printf("ID %s\n",$2);
+					// printf("ID %s\n",$2);
 					SyntaxTreeNode * temp1 = newSyntaxTreeNode($2);
 					SyntaxTreeNode * temp2 = newSyntaxTreeNode("[");
 					SyntaxTreeNode * temp3 = newSyntaxTreeNode($4);
@@ -157,11 +157,15 @@ var-declaration : type-specifier IDENTIFIER  SEMICOLON
 					SyntaxTreeNode_AddChild($$,temp2);
 					SyntaxTreeNode_AddChild($$,temp3);
 					SyntaxTreeNode_AddChild($$,temp4);
+					SyntaxTreeNode_AddChild($$,temp5);
+					free($2);
+					free($4);
 				}
 				;
 
 type-specifier : INT 
 				{
+					// printf("Find int.\n");
 					SyntaxTreeNode * temp = newSyntaxTreeNode("int");
 					$$ = newSyntaxTreeNode("type-specifier");
 					SyntaxTreeNode_AddChild($$,temp);
@@ -176,7 +180,7 @@ type-specifier : INT
 
 fun-declaration : type-specifier IDENTIFIER LPARENTHESE params RPARENTHESE compound-stmt 
 				{ 
-					printf("ID %s\n",$2);
+					// printf("ID %s\n",$2);
 					$$ = newSyntaxTreeNode("fun-declaration");
 					SyntaxTreeNode * temp1 = newSyntaxTreeNode($2);  // ID
 					SyntaxTreeNode * temp2 = newSyntaxTreeNode("("); // (
@@ -187,6 +191,7 @@ fun-declaration : type-specifier IDENTIFIER LPARENTHESE params RPARENTHESE compo
 					SyntaxTreeNode_AddChild($$, $4);
 					SyntaxTreeNode_AddChild($$, temp3);
 					SyntaxTreeNode_AddChild($$, $6);
+					free($2);
 				}
 				;
 
@@ -220,21 +225,23 @@ param-list: param-list COMMA param
 
 param : type-specifier IDENTIFIER 
 		{ 
-			printf("ID %s\n",$2);
+			// printf("ID %s\n",$2);
 			$$ = newSyntaxTreeNode("param");
 			SyntaxTreeNode * temp = newSyntaxTreeNode($2);
 			SyntaxTreeNode_AddChild($$, $1);
 			SyntaxTreeNode_AddChild($$, temp);
+			free($2);
 		}
 		| type-specifier IDENTIFIER ARRAY 
 		{ 
-			printf("ID %s\n",$2); 
+			// printf("ID %s\n",$2); 
 			$$ = newSyntaxTreeNode("param");
 			SyntaxTreeNode * temp1 = newSyntaxTreeNode($2);
 			SyntaxTreeNode * temp2 = newSyntaxTreeNode("[]");
 			SyntaxTreeNode_AddChild($$, $1);
 			SyntaxTreeNode_AddChild($$, temp1);
 			SyntaxTreeNode_AddChild($$, temp2);
+			free($2);
 		}
 		;
 
@@ -387,18 +394,20 @@ expression : var ASSIN expression
 
 var : IDENTIFIER 
 	{ 
-		printf("ID %s\n",$1);
+		// printf("ID %s\n",$1);
 		$$ = newSyntaxTreeNode("var");
 		SyntaxTreeNode_AddChild($$, newSyntaxTreeNode($1)); 
+		free($1);
 	}
 	| IDENTIFIER LBRACKET expression RBRACKET 
 	{ 
-		printf("ID %s\n",$1); 
+		// printf("ID %s\n",$1); 
 		$$ = newSyntaxTreeNode("var");
 		SyntaxTreeNode_AddChild($$, newSyntaxTreeNode($1)); 
 		SyntaxTreeNode_AddChild($$, newSyntaxTreeNode("[")); 
 		SyntaxTreeNode_AddChild($$, $3);
 		SyntaxTreeNode_AddChild($$, newSyntaxTreeNode("]")); 
+		free($1);
 	}
 	;
 
@@ -521,17 +530,19 @@ factor : LPARENTHESE expression RPARENTHESE
 		{
 			$$ = newSyntaxTreeNode("factor");
 			SyntaxTreeNode_AddChild($$, newSyntaxTreeNode($1));
+			free($1);
 		}
 		;
 
 call : IDENTIFIER LPARENTHESE args RPARENTHESE 
 	{ 
-		printf("ID %s\n",$1); 
+		// printf("ID %s\n",$1); 
 		$$ = newSyntaxTreeNode("call");
 		SyntaxTreeNode_AddChild($$, newSyntaxTreeNode($1));
 		SyntaxTreeNode_AddChild($$, newSyntaxTreeNode("("));
 		SyntaxTreeNode_AddChild($$, $3);
 		SyntaxTreeNode_AddChild($$, newSyntaxTreeNode(")"));
+		free($1);
 	}
 	;
 
@@ -598,8 +609,8 @@ void syntax(const char * input, const char * output)
 
 	printf("[OUTPUT] Printing tree to output file %s\n", outputpath);
 	printSyntaxTree(fp, gt);
-	//deleteSyntaxTree(gt);
-	gt = 0;
+	deleteSyntaxTree(gt);
+	gt = NULL;
 
 	fclose(fp);
 	printf("[END] Syntax analysis end for %s\n", input);
