@@ -583,7 +583,7 @@ void yyerror(const char * s)
 {
 	// TODO: variables in Lab1 updates only in analyze() function in lexical_analyzer.l
 	//       You need to move position updates to show error output below
-	fprintf(stderr, "%s:syntax error for %s in line: %d, pos_start: %d, pos_end:%d \n", s, yytext, lines, pos_start, pos_end);
+	fprintf(stderr, "%s:%d syntax error for %s\n", s, lines, yytext);
 }
 
 /// \brief Syntax analysis from input file to output file
@@ -593,6 +593,8 @@ void yyerror(const char * s)
 void syntax(const char * input, const char * output)
 {
 	gt = newSyntaxTree();
+	lines = 1;
+	// pos_start = pos_end = 1;
 
 	char inputpath[256] = "./testcase/";
 	char outputpath[256] = "./syntree/";
