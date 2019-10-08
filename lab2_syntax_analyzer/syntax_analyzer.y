@@ -594,7 +594,7 @@ void syntax(const char * input, const char * output)
 {
 	gt = newSyntaxTree();
 	lines = 1;
-	// pos_start = pos_end = 1;
+	pos_start = pos_end = 1;
 
 	char inputpath[256] = "./testcase/";
 	char outputpath[256] = "./syntree/";
