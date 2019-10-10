@@ -50,7 +50,18 @@ YYSTYPE yylval;
 
 ## 二义性文法处理
 
-******************TODO******************.
+给`if-else`的结合顺序增添优先级，`else`优先结合最近的未配对的`if`。
+
+具体在`yacc`中，声明优先级顺序，使得出现冲突时优先移进。
+
+```
+%nonassoc "then"
+%nonassoc ELSE
+
+selection-stmt : IF LPARENTHESE expression RPARENTHESE statement    			%prec "then"
+				| IF LPARENTHESE expression RPARENTHESE statement ELSE statement 
+				;
+```
 
 ## 新的测试用例
 
@@ -63,3 +74,7 @@ YYSTYPE yylval;
 ## 实验建议
 
 建议助教重新整理工程目录，将文档和代码分开，这样目录结构会更清晰一些。
+
+## 参考文献
+
+[1. solve shift-reduce-conflict in if-else.](https://stackoverflow.com/questions/12731922/reforming-the-grammar-to-remove-shift-reduce-conflict-in-if-then-else)
