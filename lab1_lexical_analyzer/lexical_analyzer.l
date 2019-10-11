@@ -34,9 +34,26 @@ identifierPattern [a-zA-Z][a-zA-Z]*
 
  /******************TODO*********************/
  /****请在此补全所有flex的模式与动作  start******/
-\n					{ lines += 1; pos_start = 1; pos_end = 1; }
-\t					{ pos_end += 1; }
-" "					{ pos_end += 1; }
+\n					{ 
+						lines += 1; 
+						pos_start = 1; 
+						pos_end = 1;
+						#ifdef LAB1_ONLY
+						return EOL;
+						#endif 
+					}
+\t					{ 
+						pos_end += 1;
+						#ifdef LAB1_ONLY
+						return BLANK;
+						#endif 
+					}
+" "					{ 
+						pos_end += 1; 
+						#ifdef LAB1_ONLY
+						return BLANK;
+						#endif
+					}
 "/*"([^\*]|(\*)[^\/])*\*+\/	{ 	pos_end = pos_start; 
 								int length = strlen(yytext); 
 								for(int i = 0; i < length; i++)
@@ -48,7 +65,9 @@ identifierPattern [a-zA-Z][a-zA-Z]*
 										pos_end = 1;
 									}
 								} 
-								//return COMMENT; 
+								#ifdef LAB1_ONLY
+								return COMMENT;
+								#endif 
 							}
 ([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+)*		{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ERROR; }
 \[\]				{ pos_start = pos_end; pos_end = pos_start + strlen(yytext); return ARRAY; }
