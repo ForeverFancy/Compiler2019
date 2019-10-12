@@ -65,6 +65,7 @@ identifierPattern [a-zA-Z][a-zA-Z]*
 										pos_end = 1;
 									}
 								} 
+								pos_end  = pos_end + 1;
 								#ifdef LAB1_ONLY
 								return COMMENT;
 								#endif 
@@ -127,8 +128,8 @@ void analyzer(char* input_file_name, char* output_file_name){
 
 	int token;
 	while(token = yylex()){
-		pos_start = pos_end;
-		pos_end += strlen(yytext);
+		// pos_start = pos_end;
+		// pos_end += strlen(yytext);
 		switch(token){
 			case ERROR:
 				fprintf(fp, "[ERR]: unable to analysize %s at %d line, from %d to %d\n", yytext, lines, pos_start, pos_end);
