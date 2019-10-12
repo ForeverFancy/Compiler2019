@@ -54,7 +54,7 @@ identifierPattern [a-zA-Z][a-zA-Z]*
 						return BLANK;
 						#endif
 					}
-"/*"([^\*]|(\*)[^\/])*\*+\/	{ 	pos_end = pos_start; 
+"/*"([^\*]|(\*)[^\/])*\*+\/	{ 	pos_end = pos_end; 
 								int length = strlen(yytext); 
 								for(int i = 0; i < length; i++)
 								{
@@ -64,8 +64,7 @@ identifierPattern [a-zA-Z][a-zA-Z]*
 										lines++;
 										pos_end = 1;
 									}
-								} 
-								pos_end  = pos_end + 1;
+								}
 								#ifdef LAB1_ONLY
 								return COMMENT;
 								#endif 
