@@ -193,7 +193,7 @@ int getAllTestcase(char filename[][256]){
 /// then create *.tokens files under 'tokens' directory
 /// \todo student should fill this function
 int lex_main(int argc, char **argv){
-	char filename[10][256];
+	char filename[50][256];
 	char output_file_name[256];
 	char suffix[] = ".tokens";
 	files_count = getAllTestcase(filename);
