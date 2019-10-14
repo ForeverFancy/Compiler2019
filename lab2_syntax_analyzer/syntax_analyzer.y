@@ -633,9 +633,9 @@ int syntax_main(int argc, char ** argv)
 	const char * suffix = ".syntax_tree";
 	int fn = getAllTestcase(filename);
 	for (int i = 0; i < fn; i++) {
-			strcpy(output_file_name,filename[i]);
-			strcpy(output_file_name+strlen(filename[i])-7,suffix);
-			syntax(filename[i], output_file_name);
+		strcpy(output_file_name,filename[i]);
+		strcpy(output_file_name+strlen(filename[i])-7,suffix);
+		syntax(filename[i], output_file_name);
 	}
 	return 0;
 }

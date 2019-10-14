@@ -3,3 +3,4 @@ syntree/*
 !syntree/.gitkeep
 
 *.swp
+res_diff.py

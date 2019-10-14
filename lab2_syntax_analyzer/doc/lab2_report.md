@@ -318,6 +318,21 @@
 
 以此类推完成语法分析树的生成。
 
+使用自动化脚本判断生成的语法树和助教的结果是否一致：
+
+```python
+import os
+
+def res_diff():
+    files = os.listdir("./syntree")[1:]
+    print(files)
+    for file in files:
+        os.system("diff ./syntree/" + file + " ./lab2_syntax_analyzer/TA_syntree/" + file)
+
+if __name__ == "__main__":
+    res_diff()
+```
+
 ## 实验难点
 
 ### 遇到的问题及解决方案
