@@ -4,3 +4,5 @@ syntree/*
 
 *.swp
 res_diff.py
+.vscode/c_cpp_properties.json
+.vscode/settings.json
