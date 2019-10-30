@@ -31,16 +31,18 @@ int main()
     auto mainFun = Function::Create(FunctionType::get(TYPE32, false), GlobalValue::ExternalLinkage, "main", module);
 
     auto bb = BasicBlock::Create(context, "entry", mainFun);
+    // Begin: BasicBlock entry
     builder.SetInsertPoint(bb);
 
     auto a = builder.CreateAlloca(TYPE32);
-    a->setAlignment(4);                 //Allocate a.
-    builder.CreateStore(CONST(1), a)->setAlignment(4);                  // Store the value to a.
+    a->setAlignment(4);                                //Allocate a.
+    builder.CreateStore(CONST(1), a)->setAlignment(4); // Store the value to a.
 
     auto retval = builder.CreateLoad(a);
-    retval->setAlignment(4);            // Load the value to retval.
+    retval->setAlignment(4); // Load the value to retval.
 
-    builder.CreateRet(retval);          // Return.
+    builder.CreateRet(retval); // Return.
+    // End: BasicBlock entry
     module->print(outs(),nullptr);
     delete module;
     return 0;

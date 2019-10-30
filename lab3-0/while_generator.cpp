@@ -32,7 +32,7 @@ int main()
 
     auto bb = BasicBlock::Create(context, "entry", mainFun);
     builder.SetInsertPoint(bb);             // Entry.
-
+    // Begin: BasicBlock entry
     auto a = builder.CreateAlloca(TYPE32);
     auto i = builder.CreateAlloca(TYPE32);
 
@@ -43,24 +43,31 @@ int main()
     auto truebb =BasicBlock::Create(context, "truebb", mainFun);
     auto ret = BasicBlock::Create(context, "ret", mainFun);
     builder.CreateBr(loop);                 // Jump to loop.
+    // End: BasicBlock entry
 
+    // BasicBlock: BasicBlock loop
     builder.SetInsertPoint(loop);
 
     auto iLoad = builder.CreateLoad(i);
     auto aLoad = builder.CreateLoad(a);
     auto icmp = builder.CreateICmpSLT(iLoad, CONST(10)); // See if should break.
     builder.CreateCondBr(icmp,truebb,ret);
+    // End: BasicBlock loop
 
+    // Begin: BasicBlock truebb
     builder.SetInsertPoint(truebb);
     auto inc = builder.CreateAdd(iLoad, CONST(1));
     auto tempa = builder.CreateAdd(inc, aLoad);
     builder.CreateStore(inc, i);
     builder.CreateStore(tempa, a); // i = i + 1; a = a + i;
     builder.CreateBr(loop);
+    // End: BasicBlock truebb
 
+    // Begin: BasicBlock ret
     builder.SetInsertPoint(ret);
     auto retval = builder.CreateLoad(a);
     builder.CreateRet(retval); // Return a
+    // End: BasicBlock ret
 
     module->print(outs(), nullptr);
     delete module;

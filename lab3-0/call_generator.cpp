@@ -28,12 +28,13 @@ int main()
     IRBuilder<> builder(context);
     auto module = new Module("call", context);
 
-    std::vector<Type *> Ints(1, TYPE32);    // Declare type of function args.
+    std::vector<Type *> Ints(1, TYPE32); // Declare type of function args.
     auto calleeFunction = Function::Create(FunctionType::get(TYPE32, Ints, false),
-                                    GlobalValue::LinkageTypes::ExternalLinkage,
-                                    "callee", module);
+                                           GlobalValue::LinkageTypes::ExternalLinkage,
+                                           "callee", module);
 
-    auto entry = BasicBlock::Create(context, "entry",calleeFunction);
+    auto entry = BasicBlock::Create(context, "entry", calleeFunction);
+    // Begin: BasicBlock entry in calleeFunction.
     builder.SetInsertPoint(entry);
 
     // Get args.
@@ -44,15 +45,17 @@ int main()
     }
 
     auto mul = builder.CreateMul(CONST(2), args[0]);
-    builder.CreateRet(mul);         // End of calleeFunction.
-
+    builder.CreateRet(mul); // End of calleeFunction.
+    // End: BasicBlock entry in calleeFunction.
 
     auto mainFun = Function::Create(FunctionType::get(TYPE32, false), GlobalValue::LinkageTypes::ExternalLinkage, "main", module);
     entry = BasicBlock::Create(context, "entry", mainFun);
+    // Begin: BasicBlock entry in mainFun.
     builder.SetInsertPoint(entry);
 
-    auto call = builder.CreateCall(calleeFunction, {CONST(10)});    // Call the function.
+    auto call = builder.CreateCall(calleeFunction, {CONST(10)}); // Call the function.
     builder.CreateRet(call);
+    // End: BasicBlock entry in mainFun.
 
     module->print(outs(), nullptr);
     delete module;
